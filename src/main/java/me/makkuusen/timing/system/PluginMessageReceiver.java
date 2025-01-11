@@ -1,6 +1,7 @@
 package me.makkuusen.timing.system;
 
 import me.makkuusen.timing.system.boatutils.BoatUtilsManager;
+import me.makkuusen.timing.system.racingscoreboard.RacingScoreboardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,10 @@ public class PluginMessageReceiver implements PluginMessageListener {
     public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] message) {
         if (channel.equalsIgnoreCase("openboatutils:settings")){
             BoatUtilsManager.pluginMessageListener(channel, player, message);
+            return;
+        }
+        else if (channel.equalsIgnoreCase(RacingScoreboardManager.CHANNEL)){
+            RacingScoreboardManager.pluginMessageListener(channel, player, message);
             return;
         }
 

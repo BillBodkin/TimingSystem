@@ -43,6 +43,7 @@ public class TPlayer implements Comparable<TPlayer> {
     private Track.TrackType trackType;
     private Integer page;
     private Integer boatUtilsVersion = null;
+    private Integer racingScoreboardVersion = null;
 
 
     public TPlayer(TimingSystem plugin, DbRow data) {
@@ -138,6 +139,21 @@ public class TPlayer implements Comparable<TPlayer> {
 
     public void setBoatUtilsVersion(Integer boatUtilsVersion) {
         this.boatUtilsVersion = boatUtilsVersion;
+    }
+
+    public boolean hasRacingScoreboard() {
+        if (racingScoreboardVersion == null) {
+            return false;
+        }
+        return racingScoreboardVersion >= 0;
+    }
+
+    public int getRacingScoreboardVersion() {
+        return racingScoreboardVersion;
+    }
+
+    public void setRacingScoreboardVersion(Integer racingScoreboardVersion) {
+        this.racingScoreboardVersion = racingScoreboardVersion;
     }
 
 

@@ -11,6 +11,7 @@ import me.makkuusen.timing.system.event.EventAnnouncements;
 import me.makkuusen.timing.system.heat.DriverScoreboard;
 import me.makkuusen.timing.system.heat.Heat;
 import me.makkuusen.timing.system.heat.Lap;
+import me.makkuusen.timing.system.racingscoreboard.RacingScoreboardManager;
 import me.makkuusen.timing.system.round.QualificationRound;
 import me.makkuusen.timing.system.track.regions.TrackRegion;
 import org.bukkit.Location;

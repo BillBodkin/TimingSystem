@@ -1,5 +1,8 @@
 package me.makkuusen.timing.system.heat;
 
+import me.makkuusen.timing.system.participant.DriverState;
+import me.makkuusen.timing.system.racingscoreboard.RacingScoreboardManager;
+import me.makkuusen.timing.system.racingscoreboard.RacingScoreboardUtils;
 import me.makkuusen.timing.system.tplayer.TPlayer;
 import me.makkuusen.timing.system.TimingSystem;
 import me.makkuusen.timing.system.participant.Driver;
@@ -13,6 +16,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class DriverScoreboard {
     TPlayer tPlayer;
@@ -27,6 +32,10 @@ public class DriverScoreboard {
     }
 
     public void setTitle() {
+        if(tPlayer.hasRacingScoreboard()) {
+            setTitleRacingScoreboard();
+        }
+
         String eventName;
         if (tPlayer.getSettings().getCompactScoreboard() && heat.getEvent().getDisplayName().length() > 8) {
             eventName = heat.getEvent().getDisplayName().substring(0, 8);
@@ -38,6 +47,10 @@ public class DriverScoreboard {
     }
 
     public void removeScoreboard() {
+        if(tPlayer.hasRacingScoreboard()){
+            removeScoreboardRacingScoreboard();
+        }
+
         tPlayer.clearScoreboard();
     }
 
@@ -47,6 +60,10 @@ public class DriverScoreboard {
     }
 
     public void setLines() {
+        if(tPlayer.hasRacingScoreboard()){
+            setLinesRacingScoreboard();
+        }
+
         List<Component> lines;
         int pos = driver.getPosition();
         if (pos > 12 && heat.getLivePositions().size() > 15) {
@@ -173,6 +190,18 @@ public class DriverScoreboard {
             return ScoreboardUtils.getDriverLineNegativeQualyGap(timeDiff * -1, driver, driver.getPosition(), compact, theme);
         }
         return ScoreboardUtils.getDriverLineQualyGap(timeDiff, driver, driver.getPosition(), compact, theme);
+    }
+
+    private void removeScoreboardRacingScoreboard() {
+        RacingScoreboardManager.sendPluginMessage(tPlayer.getPlayer(), RacingScoreboardManager.PACKET_ID_REMOVE_SCOREBOARD_S2C, (out) -> {});
+    }
+
+    private void setTitleRacingScoreboard() {
+        RacingScoreboardUtils.setTitleRacingScoreboard(tPlayer.getPlayer(), heat.getEvent().getDisplayName());
+    }
+
+    private void setLinesRacingScoreboard() {
+        RacingScoreboardUtils.sendScoreboardForHeat(this.heat, this.driver.getTPlayer().getPlayer(), this.driver);
     }
 }
 

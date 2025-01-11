@@ -1,5 +1,7 @@
 package me.makkuusen.timing.system.heat;
 
+import me.makkuusen.timing.system.racingscoreboard.RacingScoreboardManager;
+import me.makkuusen.timing.system.racingscoreboard.RacingScoreboardUtils;
 import me.makkuusen.timing.system.tplayer.TPlayer;
 import me.makkuusen.timing.system.TimingSystem;
 import me.makkuusen.timing.system.participant.Driver;
@@ -36,6 +38,10 @@ public class SpectatorScoreboard {
     }
 
     private void updateScoreBoard(Spectator spec) {
+        if(spec.getTPlayer().hasRacingScoreboard()){
+            updateScoreBoardsRacingScoreboard(spec);
+        }
+
         if (spec.getTPlayer().getPlayer() != null) {
             spec.getTPlayer().initScoreboard();
             List<Component> lines;
@@ -46,6 +52,10 @@ public class SpectatorScoreboard {
     }
 
     public void setTitle(TPlayer tPlayer) {
+        if(tPlayer.hasRacingScoreboard()) {
+            setTitleRacingScoreboard(tPlayer);
+        }
+
         String eventName;
         if (tPlayer.getSettings().getCompactScoreboard() && heat.getEvent().getDisplayName().length() > 8) {
             eventName = heat.getEvent().getDisplayName().substring(0, 8);
@@ -58,6 +68,10 @@ public class SpectatorScoreboard {
 
     public void removeScoreboards() {
         for (Spectator spec : heat.getEvent().getSpectators().values()) {
+            if(spec.getTPlayer().hasRacingScoreboard()){
+                removeScoreboardRacingScoreboard(spec);
+            }
+
             spec.getTPlayer().clearScoreboard();
         }
     }
@@ -144,5 +158,17 @@ public class SpectatorScoreboard {
             return ScoreboardUtils.getDriverLineNegativeQualyGap(timeDiff * -1, driver, driver.getPosition(), compact, theme);
         }
         return ScoreboardUtils.getDriverLineQualyGap(timeDiff, driver, driver.getPosition(), compact, theme);
+    }
+
+    private void removeScoreboardRacingScoreboard(Spectator spec) {
+        RacingScoreboardManager.sendPluginMessage(spec.getTPlayer().getPlayer(), RacingScoreboardManager.PACKET_ID_REMOVE_SCOREBOARD_S2C, (out) -> {});
+    }
+
+    private void setTitleRacingScoreboard(TPlayer tPlayer) {
+        RacingScoreboardUtils.setTitleRacingScoreboard(tPlayer.getPlayer(), heat.getEvent().getDisplayName());
+    }
+
+    private void updateScoreBoardsRacingScoreboard(Spectator spec) {
+        RacingScoreboardUtils.sendScoreboardForHeat(this.heat, spec.getTPlayer().getPlayer(), null);
     }
 }
